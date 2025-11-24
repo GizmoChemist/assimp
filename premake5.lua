@@ -1,22 +1,3 @@
-
--- Solution configuration
-workspace "Lifter"
-	architecture "x64"
-
-	-- NOTE: this is the project you want to open when you press start in visual studio
-	startproject "SampleGame"
-
-	configurations {
-		"Debug",
-		"Release",
-		"Dist"
-	}
-
-
--- Build output folder structure
--- Example output: bin/Debug-windows-x86_64/
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
 project "zlib"
 	kind "StaticLib"
 	language "C++"
