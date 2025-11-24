@@ -1,118 +1,145 @@
-project "assimp"
+
+-- Solution configuration
+workspace "Lifter"
+	architecture "x64"
+
+	-- NOTE: this is the project you want to open when you press start in visual studio
+	startproject "SampleGame"
+
+	configurations {
+		"Debug",
+		"Release",
+		"Dist"
+	}
+
+
+-- Build output folder structure
+-- Example output: bin/Debug-windows-x86_64/
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+project "zlib"
 	kind "StaticLib"
 	language "C++"
+	cppdialect "C++14"
+	warnings "Off"
+	location "contrib/zlib"
+	
+	targetdir ("bin/"     .. outputdir .. "/")
+	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	targetdir  ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	warnings 'Off'
-	optimize 'Speed'
-
-	includedirs {
-		'./cfg/',
-		'./cfg/assimp/',
-		'./',
-		'./contrib/',
-		'./contrib/irrXML/',
-		'./contrib/unzip/',
-		'./contrib/rapidjson/include/',
-		'./contrib/pugixml/src/',
-		'./contrib/zlib/',
-		'./contrib/utf8cpp/source/',
-		'./code/',
-		'./include/'
+	includedirs
+	{
+		"./",
+		"include",
+		"code",
+		"contrib/zlib"
 	}
-
-	files {
-		-- Dependencies
-		'./contrib/unzip/**',
-		'./contrib/irrXML/**',
-		'./contrib/zlib/*',
-		-- Common
-		'./code/Common/**',
-		'./code/PostProcessing/**',
-		'./code/Material/**',
-		'./code/CApi/**',
-		'./code/Geometry/**',
-		-- Importers
-		'./code/AssetLib/IQM/**',
-		'./code/AssetLib/Assbin/**',
-
-		'./code/AssetLib/Collada/**',
-		'./code/AssetLib/Obj/**',
-		-- 'assimp/code/AssetLib/Blender/**', 'assimp/contrib/poly2tri/poly2tri/**',
-		'./code/AssetLib/FBX/**',
-		'assimp/code/glTF2/**',
-		'assimp/code/glTF/**',
+	
+	files
+	{
+		"contrib/zlib/*.c",
+		"contrib/zlib/*.h",
 	}
+	
+	defines
+	{
+		"ASSIMP_BUILD_NO_M3D_IMPORTER",
+		"ASSIMP_BUILD_NO_M3D_EXPORTER",
+		"ASSIMP_BUILD_NO_VRML_IMPORTER"
+	}
+	
+	filter "system:windows"
+		systemversion "latest"
+		staticruntime "On"
+		buildoptions "/MD"
 
--- Importers
-	defines {
-		'ASSIMP_BUILD_NO_3D_IMPORTER',
-		'ASSIMP_BUILD_NO_3DS_IMPORTER',
-		'ASSIMP_BUILD_NO_3MF_IMPORTER',
-		'ASSIMP_BUILD_NO_AC_IMPORTER',
-		'ASSIMP_BUILD_NO_AMF_IMPORTER',
-		'ASSIMP_BUILD_NO_ASE_IMPORTER',
-		-- 'ASSIMP_BUILD_NO_ASSBIN_IMPORTER'
-		'ASSIMP_BUILD_NO_B3D_IMPORTER',
-		'ASSIMP_BUILD_NO_BLEND_IMPORTER',
-		'ASSIMP_BUILD_NO_BVH_IMPORTER',
-		'ASSIMP_BUILD_NO_C4D_IMPORTER',
-		'ASSIMP_BUILD_NO_COB_IMPORTER',
-		-- 'ASSIMP_BUILD_NO_COLLADA_IMPORTER',
-		'ASSIMP_BUILD_NO_CSM_IMPORTER',
-		'ASSIMP_BUILD_NO_DXF_IMPORTER',
-		-- 'ASSIMP_BUILD_NO_FBX_IMPORTER',
-		-- 'ASSIMP_BUILD_NO_GLTF_IMPORTER',
-		'ASSIMP_BUILD_NO_HMP_IMPORTER',
-		'ASSIMP_BUILD_NO_IFC_IMPORTER',
-		'ASSIMP_BUILD_NO_IRR_IMPORTER',
-		'ASSIMP_BUILD_NO_IRRMESH_IMPORTER',
-		'ASSIMP_BUILD_NO_LWO_IMPORTER',
-		'ASSIMP_BUILD_NO_LWS_IMPORTER',
-		'ASSIMP_BUILD_NO_M3D_IMPORTER',
-		'ASSIMP_BUILD_NO_MD2_IMPORTER',
-		'ASSIMP_BUILD_NO_MD3_IMPORTER',
-		'ASSIMP_BUILD_NO_MD5_IMPORTER',
-		'ASSIMP_BUILD_NO_MDC_IMPORTER',
-		'ASSIMP_BUILD_NO_MDL_IMPORTER',
-		'ASSIMP_BUILD_NO_MMD_IMPORTER',
-		'ASSIMP_BUILD_NO_MS3D_IMPORTER',
-		'ASSIMP_BUILD_NO_NDO_IMPORTER',
-		'ASSIMP_BUILD_NO_NFF_IMPORTER',
-		-- 'ASSIMP_BUILD_NO_OBJ_IMPORTER',
-		'ASSIMP_BUILD_NO_OFF_IMPORTER',
-		'ASSIMP_BUILD_NO_OGRE_IMPORTER',
-		'ASSIMP_BUILD_NO_OPENGEX_IMPORTER',
-		'ASSIMP_BUILD_NO_PLY_IMPORTER',
-		'ASSIMP_BUILD_NO_Q3BSP_IMPORTER',
-		'ASSIMP_BUILD_NO_Q3D_IMPORTER',
-		'ASSIMP_BUILD_NO_RAW_IMPORTER',
-		'ASSIMP_BUILD_NO_SIB_IMPORTER',
-		'ASSIMP_BUILD_NO_SMD_IMPORTER',
-		'ASSIMP_BUILD_NO_STEP_IMPORTER',
-		'ASSIMP_BUILD_NO_STL_IMPORTER',
-		'ASSIMP_BUILD_NO_TERRAGEN_IMPORTER',
-		'ASSIMP_BUILD_NO_X_IMPORTER',
-		'ASSIMP_BUILD_NO_X3D_IMPORTER',
-		'ASSIMP_BUILD_NO_XGL_IMPORTER'
+project "assimp"
+	kind "SharedLib"
+	language "C++"
+	cppdialect "C++17"
+	warnings "Off"
+
+	targetdir ("bin/"     .. outputdir .. "/")
+	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")
+	
+	links { "zlib" }
+	
+	includedirs
+	{
+		"./",
+		"include",
+		"code",
+		"contrib",
+		
+		"contrib/zlib",
+		"contrib/pugixml/src",
+		"contrib/utf8cpp/source",
+		"contrib/rapidjson/include",
+		"contrib/unzip",
+		"contrib/openddlparser/include",
 	}
-	-- Exporters
-	defines {
-		'ASSIMP_BUILD_NO_COLLADA_EXPORTER',
-		'ASSIMP_BUILD_NO_X_EXPORTER',
-		'ASSIMP_BUILD_NO_STEP_EXPORTER',
-		'ASSIMP_BUILD_NO_OBJ_EXPORTER',
-		'ASSIMP_BUILD_NO_STL_EXPORTER',
-		'ASSIMP_BUILD_NO_PLY_EXPORTER',
-		'ASSIMP_BUILD_NO_3DS_EXPORTER',
-		'ASSIMP_BUILD_NO_GLTF_EXPORTER',
-		-- 'ASSIMP_BUILD_NO_ASSBIN_EXPORTER',
-		'ASSIMP_BUILD_NO_ASSXML_EXPORTER',
-		'ASSIMP_BUILD_NO_X3D_EXPORTER',
-		'ASSIMP_BUILD_NO_FBX_EXPORTER',
-		'ASSIMP_BUILD_NO_M3D_EXPORTER',
-		'ASSIMP_BUILD_NO_3MF_EXPORTER',
-		'ASSIMP_BUILD_NO_ASSJSON_EXPORTER'
+	
+	files 
+	{
+		"code/**.h",
+		"code/**.cpp",
+		"code/**.c",
+		"include/**.h",
+		"include/**.cpp",
+		
+		"contrib/clipper/clipper.cpp",
+		"contrib/clipper/clipper.hpp",
+		
+		"contrib/Open3DGC/**.h",
+		"contrib/Open3DGC/**.hpp",
+		"contrib/Open3DGC/**.cpp",
+		"contrib/Open3DGC/**.inl",
+		
+		"contrib/openddlparser/**.h",
+		"contrib/openddlparser/**.cpp",
+		
+		"contrib/poly2tri/poly2tri/common/shapes.cc",
+		"contrib/poly2tri/poly2tri/common/shapes.h",
+		"contrib/poly2tri/poly2tri/common/utils.h",
+		
+		"contrib/poly2tri/poly2tri/sweep/*.h",
+		"contrib/poly2tri/poly2tri/sweep/*.cc",
+		
+		"contrib/pugixml/src/**.hpp",
+		"contrib/pugixml/src/**.cpp",
+		
+		"contrib/stb/stb_image.h",
+		
+		"contrib/unzip/*.h",
+		"contrib/unzip/*.c",
+		
+		"contrib/zip/*.h",
+		"contrib/zip/*.c"
 	}
+	
+	defines
+	{
+		"ASSIMP_BUILD_NO_IFC_IMPORTER",
+		"ASSIMP_BUILD_NO_IFC_EXPORTER",
+		
+		"ASSIMP_BUILD_NO_3MF_IMPORTER",
+		"ASSIMP_BUILD_NO_3MF_EXPORTER",
+		
+		"ASSIMP_BUILD_DLL_EXPORT",
+		"ASSIMP_BUILD_NO_M3D_IMPORTER",
+		"ASSIMP_BUILD_NO_M3D_EXPORTER",
+		"ASSIMP_BUILD_NO_VRML_IMPORTER",
+		
+		"ASSIMP_BUILD_NO_C4D_IMPORTER",
+		"ASSIMP_BUILD_NO_USD_IMPORTER",
+		"MINIZ_USE_UNALIGNED_LOADS_AND_STORES=0",
+		"ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1",
+		"RAPIDJSON_HAS_STDSTRING=1",
+		"RAPIDJSON_NOMEMBERITERATORCLASS",
+		"OPENDDLPARSER_BUILD"
+	}
+	
+	filter "system:windows"
+		systemversion "latest"
+		staticruntime "On"
+		buildoptions "/MD"

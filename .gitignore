@@ -32,10 +32,7 @@ CMakeLists.txt.user
 # Generated
 assimp.pc
 assimp.aps
-revision.h
-contrib/zlib/zconf.h
 contrib/zlib/zlib.pc
-include/assimp/config.h
 unit.vcxproj.user
 
 # CMake
@@ -126,3 +123,9 @@ generated/*
 contrib/meshlab/autoclone
 # tinyusdz repo, automatically cloned via CMake
 contrib/tinyusdz/autoclone
+*.obj
+*.recipe
+*.pdb
+bin-int/Debug-windows-x86_64/assimp/assimp.vcxproj.FileListAbsolute.txt
+bin-int/Debug-windows-x86_64/zlib/zlib.vcxproj.FileListAbsolute.txt
+*.ilk
