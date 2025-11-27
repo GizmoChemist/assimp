@@ -65,8 +65,10 @@ project "assimp"
 		"code/**.h",
 		"code/**.cpp",
 		"code/**.c",
+		"code/**.hpp",
 		"include/**.h",
 		"include/**.cpp",
+		"include/**.hpp",
 		
 		"contrib/clipper/clipper.cpp",
 		"contrib/clipper/clipper.hpp",
