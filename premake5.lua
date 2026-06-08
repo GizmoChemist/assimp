@@ -1,3 +1,6 @@
+-- If you use this premake script, you'll need to define the BIN_DIR and 
+-- OBJ_DIR variables according to your personal preferences.
+
 project "zlib"
 	kind "StaticLib"
 	language "C++"
@@ -5,25 +8,22 @@ project "zlib"
 	warnings "Off"
 	location "contrib/zlib"
 	
-	targetdir ("bin/"     .. outputdir .. "/")
-	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir (BIN_DIR)
+	objdir    (OBJ_DIR)
 
-	includedirs
-	{
+	includedirs {
 		"./",
 		"include",
 		"code",
 		"contrib/zlib"
 	}
 	
-	files
-	{
+	files {
 		"contrib/zlib/*.c",
 		"contrib/zlib/*.h",
 	}
 	
-	defines
-	{
+	defines {
 		"ASSIMP_BUILD_NO_M3D_IMPORTER",
 		"ASSIMP_BUILD_NO_M3D_EXPORTER",
 		"ASSIMP_BUILD_NO_VRML_IMPORTER"
@@ -40,13 +40,12 @@ project "assimp"
 	cppdialect "C++17"
 	warnings "Off"
 
-	targetdir ("bin/"     .. outputdir .. "/")
-	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir (BIN_DIR)
+	objdir    (OBJ_DIR)
 	
 	links { "zlib" }
 	
-	includedirs
-	{
+	includedirs {
 		"./",
 		"include",
 		"code",
@@ -60,8 +59,7 @@ project "assimp"
 		"contrib/openddlparser/include",
 	}
 	
-	files 
-	{
+	files {
 		"code/**.h",
 		"code/**.cpp",
 		"code/**.c",
@@ -100,8 +98,7 @@ project "assimp"
 		"contrib/zip/*.c"
 	}
 	
-	defines
-	{
+	defines {
 		"ASSIMP_BUILD_NO_IFC_IMPORTER",
 		"ASSIMP_BUILD_NO_IFC_EXPORTER",
 		
